@@ -6,9 +6,14 @@ end
 
 Capistrano::Configuration.instance.load do
 
-  _cset :shared_files,       %w(config/database.yml)
-  _cset :shared_file_dir,    'files'
-  _cset :shared_file_backup, false
+  _cset :shared_files,          %w(config/database.yml)
+  _cset :shared_file_dir,       'files'
+  _cset :shared_file_local_dir, '.'
+  _cset :shared_file_backup,    false
+
+  def local_path_to(file)
+    File.join(shared_file_local_dir, file)
+  end
 
   def remote_path_to(file)
     File.join(shared_path, shared_file_dir, file)
@@ -32,20 +37,22 @@ Capistrano::Configuration.instance.load do
     desc 'Upload shared files to server'
     task :upload, :except => { :no_release => true } do
       shared_files.each do |file|
+        local_file = local_path_to(file)
         if shared_file_backup
-          top.download(remote_path_to(file), backup_path_to(file), :via => :scp)
+          top.download(remote_path_to(file), backup_path_to(local_file), :via => :scp)
         end
-        top.upload(file, remote_path_to(file), :via => :scp)
+        top.upload(local_file, remote_path_to(file), :via => :scp)
       end
     end
 
     desc 'Download shared files from server.'
     task :download, :except => { :no_release => true } do
       shared_files.each do |file|
+        local_file = local_path_to(file)
         if shared_file_backup
-          run_locally "cp #{file} #{backup_path_to(file)}"
+          run_locally "cp #{local_file} #{backup_path_to(local_file)}"
         end
-        top.download(remote_path_to(file), file, :via => :scp)
+        top.download(remote_path_to(file), local_file, :via => :scp)
       end
     end
 
