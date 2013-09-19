@@ -39,7 +39,7 @@ Capistrano::Configuration.instance.load do
       shared_files.each do |file|
         local_file = local_path_to(file)
         if shared_file_backup
-          top.download(remote_path_to(file), backup_path_to(local_file), :via => :scp)
+          top.download(remote_path_to(file), backup_path_to(local_file), :via => :scp, :once => true)
         end
         top.upload(local_file, remote_path_to(file), :via => :scp)
       end
@@ -52,7 +52,7 @@ Capistrano::Configuration.instance.load do
         if shared_file_backup
           run_locally "cp #{local_file} #{backup_path_to(local_file)}"
         end
-        top.download(remote_path_to(file), local_file, :via => :scp)
+        top.download(remote_path_to(file), local_file, :via => :scp, :once => true)
       end
     end
 
