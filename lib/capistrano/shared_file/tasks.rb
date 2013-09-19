@@ -59,7 +59,7 @@ Capistrano::Configuration.instance.load do
     desc 'Symlink remote shared files to the current release directory.'
     task :symlink, :except => { :no_release => true } do
       shared_files.each do |file|
-        run "ln -nfs #{remote_path_to(file)} #{release_path}/#{file}"
+        run "ln -nfs #{remote_path_to(file)} #{current_path}/#{file}"
       end
     end
     after 'deploy:finalize_update', 'shared_file:symlink'
