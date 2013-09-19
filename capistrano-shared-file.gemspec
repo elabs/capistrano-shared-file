@@ -1,10 +1,7 @@
 # -*- encoding: utf-8 -*-
-lib = File.expand_path('../lib', __FILE__)
-require File.join(lib, 'capistrano/shared_file/version')
-
 Gem::Specification.new do |gem|
   gem.name          = "capistrano-shared-file"
-  gem.version       = Capistrano::SharedFile::VERSION
+  gem.version       = "1.1.1"
   gem.authors       = ["Daniel Salmeron Amselem"]
   gem.email         = ["daniel.amselem@gmail.com"]
   gem.description   = %q{Capistrano recipe to upload, download and symlink shared files.}
